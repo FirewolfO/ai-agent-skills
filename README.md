@@ -1,6 +1,6 @@
 # AI Agent Skills
 
-This repository is a collection of independently installable AI agent skills. Its npm CLI can install the complete collection or selected skills from `skills/`.
+This repository is a collection of independently installable AI agent skills. Its npm CLI can install the complete collection or selected root-level skill directories.
 
 ## Repository Layout
 
@@ -8,16 +8,15 @@ This repository is a collection of independently installable AI agent skills. It
 ai-agent-skills/
 ├── bin/
 │   └── codex-skills-install.js
-├── skills/
-│   └── image-to-a4-pdf/
-│       ├── SKILL.md
-│       └── scripts/
+├── image-to-a4-pdf/
+│   ├── SKILL.md
+│   └── scripts/
 ├── test/
 ├── package.json
 └── README.md
 ```
 
-Each directory under `skills/` is a standalone skill. Keeping one skill per directory makes the repository usable as both a complete collection and a source for single-skill installs.
+Each root-level directory with a `SKILL.md` file is a standalone skill. Keeping one skill per directory makes the repository usable as both a complete collection and a source for single-skill installs.
 
 ## Install The Collection
 
@@ -26,7 +25,7 @@ npm install -g github:FirewolfO/ai-agent-skills
 codex-skills install all
 ```
 
-This copies every skill under `skills/` into `~/.agents/skills`.
+This copies every root-level skill into `~/.agents/skills`.
 
 ## Install One Skill
 
@@ -66,7 +65,7 @@ npm run install:skills
 npm test
 ```
 
-The installer copies every skill under `skills/` into:
+The installer copies every root-level skill into:
 
 ```text
 ~/.agents/skills
@@ -108,18 +107,17 @@ The older `codex-skills-install` command remains available for compatibility.
 
 ## Adding A Skill
 
-Create a directory under `skills/`:
+Create a directory at the repository root:
 
 ```text
-skills/
-└── my-skill/
-    ├── SKILL.md
-    └── scripts/
+my-skill/
+├── SKILL.md
+└── scripts/
 ```
 
 Every skill directory must contain a `SKILL.md` file with valid skill frontmatter.
 
-The installer discovers skills dynamically, so adding a valid directory under `skills/` automatically makes it available to both collection and individual installation.
+The installer discovers skills dynamically, so adding a valid root-level skill directory automatically makes it available to both collection and individual installation.
 
 You can verify discovery after adding a skill with:
 

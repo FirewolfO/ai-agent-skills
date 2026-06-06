@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const packageRoot = path.resolve(__dirname, "..");
-const skillsRoot = path.join(packageRoot, "skills");
+const ignoredRootDirectories = new Set([".git", "bin", "node_modules", "test"]);
 const defaultTarget = path.join(os.homedir(), ".agents", "skills");
 
 function usage() {
@@ -86,20 +86,16 @@ function parseArgs(argv) {
 }
 
 function bundledSkills() {
-  if (!fs.existsSync(skillsRoot)) {
-    return [];
-  }
-
   return fs
-    .readdirSync(skillsRoot, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory())
+    .readdirSync(packageRoot, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory() && !ignoredRootDirectories.has(entry.name))
     .map((entry) => entry.name)
-    .filter((name) => fs.existsSync(path.join(skillsRoot, name, "SKILL.md")))
+    .filter((name) => fs.existsSync(path.join(packageRoot, name, "SKILL.md")))
     .sort((a, b) => a.localeCompare(b));
 }
 
 function copySkill(name, target, dryRun) {
-  const source = path.join(skillsRoot, name);
+  const source = path.join(packageRoot, name);
   const destination = path.join(target, name);
 
   if (!fs.existsSync(path.join(source, "SKILL.md"))) {
