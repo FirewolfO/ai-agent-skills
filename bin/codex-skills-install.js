@@ -12,11 +12,16 @@ const defaultTarget = path.join(os.homedir(), ".agents", "skills");
 
 function usage() {
   console.log(`Usage:
+  codex-skills list
+  codex-skills install all [--target DIR] [--dry-run]
+  codex-skills install <skill-name ...> [--target DIR] [--dry-run]
+
+Backward-compatible:
   codex-skills-install [skill-name ...] [--target DIR] [--dry-run]
   codex-skills-install --list
 
 Options:
-  --list        Show skills bundled in this package.
+  --list        Show skills bundled in this collection.
   --target DIR  Install into DIR instead of ~/.agents/skills.
   --dry-run     Print what would be installed without writing files.
   --help        Show this help.
@@ -25,14 +30,22 @@ Options:
 
 function parseArgs(argv) {
   const options = {
+    command: "install",
     dryRun: false,
-    list: false,
     target: defaultTarget,
     names: [],
   };
 
-  for (let i = 0; i < argv.length; i += 1) {
-    const arg = argv[i];
+  const args = [...argv];
+  if (args[0] === "list") {
+    options.command = "list";
+    args.shift();
+  } else if (args[0] === "install") {
+    args.shift();
+  }
+
+  for (let i = 0; i < args.length; i += 1) {
+    const arg = args[i];
     if (arg === "--help" || arg === "-h") {
       usage();
       process.exit(0);
@@ -42,11 +55,11 @@ function parseArgs(argv) {
       continue;
     }
     if (arg === "--list") {
-      options.list = true;
+      options.command = "list";
       continue;
     }
     if (arg === "--target") {
-      const value = argv[i + 1];
+      const value = args[i + 1];
       if (!value) {
         throw new Error("--target requires a directory");
       }
@@ -63,6 +76,10 @@ function parseArgs(argv) {
       throw new Error(`Unknown option: ${arg}`);
     }
     options.names.push(arg);
+  }
+
+  if (options.command === "list" && options.names.length > 0) {
+    throw new Error("list does not accept skill names");
   }
 
   return options;
@@ -107,7 +124,7 @@ function main() {
   const options = parseArgs(process.argv.slice(2));
   const available = bundledSkills();
 
-  if (options.list) {
+  if (options.command === "list") {
     if (available.length === 0) {
       console.log("No skills bundled.");
       return;
@@ -118,13 +135,29 @@ function main() {
     return;
   }
 
-  const selected = options.names.length > 0 ? options.names : available;
+  const requested = options.names.filter((name) => name !== "all");
+  if (options.names.includes("all") && options.names.length > 1) {
+    throw new Error('"all" cannot be combined with individual skill names');
+  }
+
+  const selected = options.names.length === 0 || options.names[0] === "all" ? available : requested;
   if (selected.length === 0) {
     throw new Error("No skills to install.");
   }
 
+  const missing = selected.filter((name) => !available.includes(name));
+  if (missing.length > 0) {
+    throw new Error(
+      `Unknown skill${missing.length > 1 ? "s" : ""}: ${missing.join(", ")}. Available: ${available.join(", ")}`
+    );
+  }
+
   for (const name of selected) {
     copySkill(name, options.target, options.dryRun);
+  }
+
+  if (!options.dryRun) {
+    console.log(`Installed ${selected.length} skill${selected.length === 1 ? "" : "s"}.`);
   }
 }
 

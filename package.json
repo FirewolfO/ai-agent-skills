@@ -1,19 +1,21 @@
 {
   "name": "codex-personal-skills",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Personal Codex skills maintained as an npm-installable package.",
   "type": "module",
   "bin": {
+    "codex-skills": "./bin/codex-skills-install.js",
     "codex-skills-install": "./bin/codex-skills-install.js"
   },
   "scripts": {
-    "install:skills": "node ./bin/codex-skills-install.js",
-    "list": "node ./bin/codex-skills-install.js --list",
-    "test": "node --check ./bin/codex-skills-install.js"
+    "install:skills": "node ./bin/codex-skills-install.js install all",
+    "list": "node ./bin/codex-skills-install.js list",
+    "test": "node --check ./bin/codex-skills-install.js && node ./test/installer.test.js"
   },
   "files": [
     "bin",
     "skills",
+    "test",
     "README.md"
   ],
   "keywords": [
