@@ -1,22 +1,39 @@
-# Personal Codex Skills
+# AI Agent Skills
 
-This repository is a collection of independently installable Codex skills. Its npm CLI can install the complete collection or selected skills.
+This repository is a collection of independently installable AI agent skills. Its npm CLI can install the complete collection or selected skills from `skills/`.
+
+## Repository Layout
+
+```text
+ai-agent-skills/
+├── bin/
+│   └── codex-skills-install.js
+├── skills/
+│   └── image-to-a4-pdf/
+│       ├── SKILL.md
+│       └── scripts/
+├── test/
+├── package.json
+└── README.md
+```
+
+Each directory under `skills/` is a standalone skill. Keeping one skill per directory makes the repository usable as both a complete collection and a source for single-skill installs.
 
 ## Install The Collection
 
 ```bash
-npm install -g github:YOUR_GITHUB_USER/skills
+npm install -g github:FirewolfO/ai-agent-skills
 codex-skills install all
 ```
 
-Replace `YOUR_GITHUB_USER/skills` with your real GitHub repository path.
+This copies every skill under `skills/` into `~/.agents/skills`.
 
 ## Install One Skill
 
 Without permanently installing the collection CLI:
 
 ```bash
-npm exec --yes --package=github:YOUR_GITHUB_USER/skills -- \
+npm exec --yes --package=github:FirewolfO/ai-agent-skills -- \
   codex-skills install image-to-a4-pdf
 ```
 
@@ -30,6 +47,12 @@ You can install several selected skills together:
 
 ```bash
 codex-skills install image-to-a4-pdf another-skill
+```
+
+To install into a different local skills directory:
+
+```bash
+codex-skills install image-to-a4-pdf --target /path/to/skills
 ```
 
 ## Local Development
@@ -98,12 +121,19 @@ Every skill directory must contain a `SKILL.md` file with valid skill frontmatte
 
 The installer discovers skills dynamically, so adding a valid directory under `skills/` automatically makes it available to both collection and individual installation.
 
+You can verify discovery after adding a skill with:
+
+```bash
+npm run list
+npm test
+```
+
 ## Publishing
 
 For GitHub-based npm installs, push this repository to GitHub and install with:
 
 ```bash
-npm install -g github:YOUR_GITHUB_USER/skills
+npm install -g github:FirewolfO/ai-agent-skills
 ```
 
 If you later want to publish to the public npm registry, remove `"private": true`, choose an available package name, set the license you want, and run:

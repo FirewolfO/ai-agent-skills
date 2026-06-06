@@ -1,7 +1,7 @@
 {
-  "name": "codex-personal-skills",
+  "name": "ai-agent-skills",
   "version": "0.2.0",
-  "description": "Personal Codex skills maintained as an npm-installable package.",
+  "description": "A GitHub-installable collection of independently installable AI agent skills.",
   "type": "module",
   "bin": {
     "codex-skills": "./bin/codex-skills-install.js",
@@ -19,10 +19,19 @@
     "README.md"
   ],
   "keywords": [
+    "ai-agent",
     "codex",
     "skills",
     "automation"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/FirewolfO/ai-agent-skills.git"
+  },
+  "bugs": {
+    "url": "https://github.com/FirewolfO/ai-agent-skills/issues"
+  },
+  "homepage": "https://github.com/FirewolfO/ai-agent-skills#readme",
   "license": "UNLICENSED",
   "private": true
 }
