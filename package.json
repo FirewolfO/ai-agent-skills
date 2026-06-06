@@ -1,0 +1,26 @@
+{
+  "name": "codex-personal-skills",
+  "version": "0.1.0",
+  "description": "Personal Codex skills maintained as an npm-installable package.",
+  "type": "module",
+  "bin": {
+    "codex-skills-install": "./bin/codex-skills-install.js"
+  },
+  "scripts": {
+    "install:skills": "node ./bin/codex-skills-install.js",
+    "list": "node ./bin/codex-skills-install.js --list",
+    "test": "node --check ./bin/codex-skills-install.js"
+  },
+  "files": [
+    "bin",
+    "skills",
+    "README.md"
+  ],
+  "keywords": [
+    "codex",
+    "skills",
+    "automation"
+  ],
+  "license": "UNLICENSED",
+  "private": true
+}
